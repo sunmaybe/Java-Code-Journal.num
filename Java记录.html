@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Code Journal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <style>
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            20% { background-position: 50% 50%; }
+            40% { background-position: 100% 50%; }
+            60% { background-position: 50% 100%; }
+            80% { background-position: 0% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(270deg, #ff7e5f, #feb47b, #86a8e7, #91eae4, #7F7FD5, #86A8E7, #ff758c, #ff7eb3);
+            background-size: 1600% 1600%;
+            margin: 0;
+            padding: 0;
+            color: #f0f0f0;
+            animation: gradientBackground 30s ease infinite;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin: 20px 0;
+            font-size: 3em;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: pulse 1.5s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from {
+                transform: scale(1);
+                opacity: 1;
+            }
+            to {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
+        }
+
+        #intro {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(8px);
+            max-width: 800px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        #intro:hover {
+            transform: translateY(-10px);
+        }
+
+        #calendar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            width: 320px;
+        }
+
+        select, button {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3c3b54;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        }
+
+        select:hover, button:hover {
+            background-color: #2c2b3e;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 320px;
+            background-color: #3c3b54;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        table:hover {
+            transform: translateY(-10px);
+        }
+
+        th, td {
+            text-align: center;
+            padding: 15px;
+            border: 1px solid #2c2b3e;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        th {
+            background-color: #2c2b3e;
+            color: #fff;
+        }
+
+        td:hover {
+            background-color: #504d6b;
+        }
+
+        .today {
+            background-color: #f39c12 !important;
+            color: #fff;
+        }
+
+        .selected-date {
+            background-color: #e74c3c !important;
+            color: #fff;
+        }
+
+        #codeArea {
+            margin: 20px auto;
+            width: 90%;
+            max-width: 1400px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(8px);
+            transition: transform 0.3s ease;
+        }
+
+        #codeArea:hover {
+            transform: translateY(-10px);
+        }
+
+        .code-block {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            align-items: flex-start;
+        }
+
+        .code-block textarea {
+            width: 65%;
+            height: 500px;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 15px;
+            margin-right: 20px;
+            border: none;
+            border-radius: 10px;
+            background-color: #2c2b3e;
+            color: #fff;
+            resize: both;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            overflow-x: auto;
+            white-space: nowrap;
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+
+        .code-block textarea:hover {
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+            transform: scale(1.02);
+        }
+
+        .description-container {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .description-container input[type="text"],
+        .description-container select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: #2c2b3e;
+            color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+
+        .description-container input[type="text"]:hover,
+        .description-container select:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+            transform: scale(1.05);
+        }
+
+        .description-container img {
+            max-width: 100%;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .description-container input[type="file"] {
+            margin-bottom: 15px;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            align-self: flex-end;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+            transform: scale(1.1);
+        }
+
+        #addCodeBtn {
+            background-color: #3498db;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            margin: 20px auto;
+            display: block;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        #addCodeBtn:hover {
+            background-color: #2980b9;
+            transform: scale(1.1);
+        }
+
+        .language-java .token.keyword {
+            color: #d73a49;
+        }
+
+        .language-java .token.string {
+            color: #032f62;
+        }
+
+        .language-java .token.function {
+            color: #005cc5;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Java Code Journal</h1>
+
+<div id="intro">
+    <p>欢迎使用 Java Code Journal！在这里，你可以每天记录和管理你的 Java 代码片段。</p>
+    <p>点击日历中的日期查看或添加当天的代码。你可以添加多段代码，并为每个代码段添加功能介绍和图片说明。</p>
+</div>
+
+<div id="calendar-container">
+    <div id="calendar-controls">
+        <button id="prevMonth">上个月</button>
+        <select id="yearSelect"></select>
+        <select id="monthSelect"></select>
+        <button id="nextMonth">下个月</button>
+    </div>
+    <div id="calendar"></div>
+</div>
+
+<div id="codeArea">
+    <div id="codeBlocksContainer"></div>
+    <button id="addCodeBtn">添加新代码段</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+<script>
+    const months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+
+    function generateYearOptions() {
+        const yearSelect = document.getElementById('yearSelect');
+        const currentYear = new Date().getFullYear();
+        for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            yearSelect.appendChild(option);
+        }
+    }
+
+    function generateMonthOptions() {
+        const monthSelect = document.getElementById('monthSelect');
+        months.forEach((month, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = month;
+            monthSelect.appendChild(option);
+        });
+    }
+
+    function generateCalendar(month, year) {
+        const calendar = document.getElementById('calendar');
+        calendar.innerHTML = '';
+
+        const currentDate = new Date();
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        const table = document.createElement('table');
+        const headerRow = document.createElement('tr');
+        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+        daysOfWeek.forEach(day => {
+            const th = document.createElement('th');
+            th.textContent = day;
+            headerRow.appendChild(th);
+        });
+        table.appendChild(headerRow);
+
+        let dateRow = document.createElement('tr');
+        for (let i = 0; i < firstDay; i++) {
+            const emptyCell = document.createElement('td');
+            dateRow.appendChild(emptyCell);
+        }
+
+        for (let date = 1; date <= daysInMonth; date++) {
+            const dayCell = document.createElement('td');
+            dayCell.textContent = date;
+
+            if (date === currentDate.getDate() && month === currentDate.getMonth() && year === currentDate.getFullYear()) {
+                dayCell.classList.add('today');
+            }
+
+            dayCell.addEventListener('click', () => {
+                document.querySelectorAll('td').forEach(cell => cell.classList.remove('selected-date'));
+                dayCell.classList.add('selected-date');
+                loadCodeForDate(date, month, year);
+            });
+
+            dateRow.appendChild(dayCell);
+
+            if ((date + firstDay) % 7 === 0) {
+                table.appendChild(dateRow);
+                dateRow = document.createElement('tr');
+            }
+        }
+
+        if (dateRow.children.length > 0) {
+            table.appendChild(dateRow);
+        }
+
+        calendar.appendChild(table);
+    }
+
+    function loadCodeForDate(date, month, year) {
+        const codeBlocksContainer = document.getElementById('codeBlocksContainer');
+        codeBlocksContainer.innerHTML = '';
+
+        const storedCode = JSON.parse(localStorage.getItem(`code-${year}-${month + 1}-${date}`)) || [];
+
+        storedCode.forEach((block, index) => {
+            addCodeBlock(block.code, block.description, block.image, block.fontSize, block.imageSize, index);
+        });
+
+        document.getElementById('addCodeBtn').dataset.currentDate = `${year}-${month + 1}-${date}`;
+    }
+
+    function addCodeBlock(code = '', description = '', image = '', fontSize = '14px', imageSize = '100%', index = null) {
+        const codeBlocksContainer = document.getElementById('codeBlocksContainer');
+
+        const codeBlock = document.createElement('div');
+        codeBlock.className = 'code-block';
+
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        textarea.style.fontSize = fontSize;
+        codeBlock.appendChild(textarea);
+
+        const descriptionContainer = document.createElement('div');
+        descriptionContainer.className = 'description-container';
+
+        const descriptionInput = document.createElement('input');
+        descriptionInput.type = 'text';
+        descriptionInput.value = description;
+        descriptionInput.placeholder = '代码功能介绍';
+        descriptionContainer.appendChild(descriptionInput);
+
+        const imageElement = document.createElement('img');
+        if (image) {
+            imageElement.src = image;
+            imageElement.style.width = imageSize;
+        }
+        descriptionContainer.appendChild(imageElement);
+
+        const imageInput = document.createElement('input');
+        imageInput.type = 'file';
+        imageInput.accept = 'image/*';
+        imageInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                imageElement.src = e.target.result;
+                saveCode();
+            };
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+        descriptionContainer.appendChild(imageInput);
+
+        const fontSizeSelect = document.createElement('select');
+        ['12px', '14px', '16px', '18px', '20px'].forEach(size => {
+            const option = document.createElement('option');
+            option.value = size;
+            option.textContent = `字体大小: ${size}`;
+            if (size === fontSize) {
+                option.selected = true;
+            }
+            fontSizeSelect.appendChild(option);
+        });
+        fontSizeSelect.addEventListener('change', (event) => {
+            textarea.style.fontSize = event.target.value;
+            saveCode();
+        });
+        descriptionContainer.appendChild(fontSizeSelect);
+
+        const imageSizeSelect = document.createElement('select');
+        ['50%', '75%', '100%', '125%', '150%'].forEach(size => {
+            const option = document.createElement('option');
+            option.value = size;
+            option.textContent = `图片大小: ${size}`;
+            if (size === imageSize) {
+                option.selected = true;
+            }
+            imageSizeSelect.appendChild(option);
+        });
+        imageSizeSelect.addEventListener('change', (event) => {
+            imageElement.style.width = event.target.value;
+            saveCode();
+        });
+        descriptionContainer.appendChild(imageSizeSelect);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '删除此代码段';
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.addEventListener('click', () => {
+            codeBlocksContainer.removeChild(codeBlock);
+            saveCode();
+        });
+        descriptionContainer.appendChild(deleteBtn);
+
+        codeBlock.appendChild(descriptionContainer);
+        codeBlocksContainer.appendChild(codeBlock);
+
+        textarea.addEventListener('input', saveCode);
+        descriptionInput.addEventListener('input', saveCode);
+    }
+
+    function saveCode() {
+        const currentDate = document.getElementById('addCodeBtn').dataset.currentDate;
+        if (!currentDate) return;
+
+        const codeBlocks = document.querySelectorAll('.code-block');
+        const codeArray = [];
+
+        codeBlocks.forEach(block => {
+            const description = block.querySelector('input[type="text"]').value;
+            const code = block.querySelector('textarea').value;
+            const image = block.querySelector('img').src;
+            const fontSize = block.querySelector('textarea').style.fontSize;
+            const imageSize = block.querySelector('img').style.width;
+            codeArray.push({ description, code, image, fontSize, imageSize });
+        });
+
+        localStorage.setItem(`code-${currentDate}`, JSON.stringify(codeArray));
+        Prism.highlightAll();
+    }
+
+    document.getElementById('addCodeBtn').addEventListener('click', () => {
+        addCodeBlock();
+        Prism.highlightAll();
+    });
+
+    document.getElementById('prevMonth').addEventListener('click', () => {
+        const yearSelect = document.getElementById('yearSelect');
+        const monthSelect = document.getElementById('monthSelect');
+        let month = parseInt(monthSelect.value);
+        let year = parseInt(yearSelect.value);
+        if (month === 0) {
+            month = 11;
+            year--;
+        } else {
+            month--;
+        }
+        monthSelect.value = month;
+        yearSelect.value = year;
+        generateCalendar(month, year);
+    });
+
+    document.getElementById('nextMonth').addEventListener('click', () => {
+        const yearSelect = document.getElementById('yearSelect');
+        const monthSelect = document.getElementById('monthSelect');
+        let month = parseInt(monthSelect.value);
+        let year = parseInt(yearSelect.value);
+        if (month === 11) {
+            month = 0;
+            year++;
+        } else {
+            month++;
+        }
+        monthSelect.value = month;
+        yearSelect.value = year;
+        generateCalendar(month, year);
+    });
+
+    document.getElementById('yearSelect').addEventListener('change', () => {
+        generateCalendar(parseInt(document.getElementById('monthSelect').value), parseInt(document.getElementById('yearSelect').value));
+    });
+
+    document.getElementById('monthSelect').addEventListener('change', () => {
+        generateCalendar(parseInt(document.getElementById('monthSelect').value), parseInt(document.getElementById('yearSelect').value));
+    });
+
+    generateYearOptions();
+    generateMonthOptions();
+
+    const today = new Date();
+    document.getElementById('yearSelect').value = today.getFullYear();
+    document.getElementById('monthSelect').value = today.getMonth();
+    generateCalendar(today.getMonth(), today.getFullYear());
+    loadCodeForDate(today.getDate(), today.getMonth(), today.getFullYear());
+    Prism.highlightAll();
+</script>
+
+</body>
+</html>
